@@ -1,0 +1,5 @@
+export const subscriberFilters = ['Status', 'Plan Type', 'Renewal Month']
+export const newspaperTypes = ['Print', 'Digital', 'Print + Digital']
+export const paymentStatuses = ['Paid', 'Pending', 'Failed']
+export const subscriptionStatuses = ['Active', 'Expired', 'Pending']
+export const subscriptionDurations = [1, 3, 6, 12, 18, 24]

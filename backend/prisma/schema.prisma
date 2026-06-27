@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String
+  payments     Payment[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([role])
+}
+
+model Subscriber {
+  id                 String   @id @default(cuid())
+  subscriberId       String   @unique
+  fullName           String
+  phone              String
+  email              String
+  address            String
+  city               String
+  pincode            String
+  newspaperType      String
+  subscriptionPlan   String
+  startDate          DateTime
+  expiryDate         DateTime
+  deliveryBoy        String
+  paymentStatus      String
+  payments           Payment[]
+  subscriptionStatus String
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([fullName])
+  @@index([phone])
+  @@index([email])
+  @@index([subscriptionStatus])
+  @@index([newspaperType])
+  @@index([subscriptionPlan])
+  @@index([expiryDate])
+  @@index([createdAt])
+}
+
+model Payment {
+  id                   String     @id @default(cuid())
+  subscriberId         String
+  subscriber           Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  amount               Decimal    @db.Decimal(10, 2)
+  paymentMethod        String
+  paymentStatus        String
+  durationMonths       Int
+  paymentDate          DateTime
+  previousExpiryDate   DateTime
+  newExpiryDate        DateTime
+  transactionReference String?
+  remarks              String?
+  recordedBy           String
+  recorder             User       @relation(fields: [recordedBy], references: [id])
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+
+  @@index([subscriberId])
+  @@index([recordedBy])
+  @@index([paymentMethod])
+  @@index([paymentStatus])
+  @@index([paymentDate])
+  @@index([createdAt])
+  @@unique([subscriberId, transactionReference])
+}
